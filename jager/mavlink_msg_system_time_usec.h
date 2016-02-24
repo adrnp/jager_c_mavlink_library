@@ -4,8 +4,8 @@
 
 typedef struct __mavlink_system_time_usec_t
 {
- uint64_t time_unix_usec; ///< Timestamp of the master clock in microseconds since UNIX epoch.
- uint64_t time_boot_usec; ///< Timestamp of the component clock since boot time in microseconds.
+ uint64_t time_unix_usec; /*< Timestamp of the master clock in microseconds since UNIX epoch.*/
+ uint64_t time_boot_usec; /*< Timestamp of the component clock since boot time in microseconds.*/
 } mavlink_system_time_usec_t;
 
 #define MAVLINK_MSG_ID_SYSTEM_TIME_USEC_LEN 16
