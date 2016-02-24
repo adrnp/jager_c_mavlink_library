@@ -4,9 +4,9 @@
 
 typedef struct __mavlink_tracking_status_t
 {
- uint64_t timestamp_usec; ///< time since boot in usec of last update from the tracking computer
- uint8_t computer_status; ///< current tracking status, see tracking status enum
- uint8_t hunt_mode_state; ///< current state of the hunt mode on the pixhawk, enumerated in hunt mode??
+ uint64_t timestamp_usec; /*< time since boot in usec of last update from the tracking computer*/
+ uint8_t computer_status; /*< current tracking status, see tracking status enum*/
+ uint8_t hunt_mode_state; /*< current state of the hunt mode on the pixhawk, enumerated in hunt mode??*/
 } mavlink_tracking_status_t;
 
 #define MAVLINK_MSG_ID_TRACKING_STATUS_LEN 10

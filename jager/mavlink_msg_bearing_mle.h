@@ -4,11 +4,11 @@
 
 typedef struct __mavlink_bearing_mle_t
 {
- uint64_t timestamp_usec; ///< The timestamp of the measurement (from the pixhawk)
- double bearing; ///< The calculated bearing
- int32_t lat; ///< Latitude where the measurement was taken
- int32_t lon; ///< Longitutde where the measurement was taken
- float alt; ///< Altitude of the measurement
+ uint64_t timestamp_usec; /*< The timestamp of the measurement (from the pixhawk)*/
+ double bearing; /*< The calculated bearing*/
+ int32_t lat; /*< Latitude where the measurement was taken*/
+ int32_t lon; /*< Longitutde where the measurement was taken*/
+ float alt; /*< Altitude of the measurement*/
 } mavlink_bearing_mle_t;
 
 #define MAVLINK_MSG_ID_BEARING_MLE_LEN 28

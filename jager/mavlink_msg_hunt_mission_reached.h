@@ -4,7 +4,7 @@
 
 typedef struct __mavlink_hunt_mission_reached_t
 {
- uint16_t reached_cmd_id; ///< the cmd id of the command that was most recently completed
+ uint16_t reached_cmd_id; /*< the cmd id of the command that was most recently completed*/
 } mavlink_hunt_mission_reached_t;
 
 #define MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN 2

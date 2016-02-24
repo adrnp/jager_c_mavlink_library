@@ -4,13 +4,13 @@
 
 typedef struct __mavlink_rssi_t
 {
- uint64_t timestamp_usec; ///< The timestamp of the measurement (from the pixhawk)
- int32_t rssi_value; ///< The rssi value measured
- int32_t rssi_value2; ///< The rssi value measured (for the second antenna)
- int32_t lat; ///< Latitude where the measurement was taken
- int32_t lon; ///< Longitutde where the measurement was taken
- float alt; ///< Altitude of the measurement
- int16_t heading; ///< The heading for the current measurement
+ uint64_t timestamp_usec; /*< The timestamp of the measurement (from the pixhawk)*/
+ int32_t rssi_value; /*< The rssi value measured*/
+ int32_t rssi_value2; /*< The rssi value measured (for the second antenna)*/
+ int32_t lat; /*< Latitude where the measurement was taken*/
+ int32_t lon; /*< Longitutde where the measurement was taken*/
+ float alt; /*< Altitude of the measurement*/
+ int16_t heading; /*< The heading for the current measurement*/
 } mavlink_rssi_t;
 
 #define MAVLINK_MSG_ID_RSSI_LEN 30

@@ -4,7 +4,7 @@
 
 typedef struct __mavlink_hunt_mission_current_t
 {
- uint16_t current_cmd_id; ///< the cmd id of the command being currently executed
+ uint16_t current_cmd_id; /*< the cmd id of the command being currently executed*/
 } mavlink_hunt_mission_current_t;
 
 #define MAVLINK_MSG_ID_HUNT_MISSION_CURRENT_LEN 2

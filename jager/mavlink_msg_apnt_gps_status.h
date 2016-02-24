@@ -4,14 +4,14 @@
 
 typedef struct __mavlink_apnt_gps_status_t
 {
- uint64_t timestamp_usec; ///< timestamp (microseconds since UNIX) from gps?
- float gps_lat; ///< latitude from apnt gps
- float gps_lon; ///< longitude from apnt gps
- float gps_alt; ///< altitude from apnt gps
- int16_t azimuth[8]; ///< array of the azimuth of up to 8 satellites in view
- uint8_t prn[8]; ///< array of prn code of up to 8 satellites in view
- uint8_t elevation[8]; ///< array of the elevation of up to 8 satellites in view
- uint8_t snr[8]; ///< array of signal to noise ration of up to 8 satellites in view
+ uint64_t timestamp_usec; /*< timestamp (microseconds since UNIX) from gps?*/
+ float gps_lat; /*< latitude from apnt gps*/
+ float gps_lon; /*< longitude from apnt gps*/
+ float gps_alt; /*< altitude from apnt gps*/
+ int16_t azimuth[8]; /*< array of the azimuth of up to 8 satellites in view*/
+ uint8_t prn[8]; /*< array of prn code of up to 8 satellites in view*/
+ uint8_t elevation[8]; /*< array of the elevation of up to 8 satellites in view*/
+ uint8_t snr[8]; /*< array of signal to noise ration of up to 8 satellites in view*/
 } mavlink_apnt_gps_status_t;
 
 #define MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN 60
