@@ -4,13 +4,13 @@
 
 typedef struct __mavlink_tracking_cmd_t
 {
- uint64_t timestamp_usec; /*< time since boot in usec of when the command was sent*/
- double north; /*< North distance to travel in meters*/
- double east; /*< East distance to travel in meters*/
- float yaw_angle; /*< Yaw angle through which to rotate, or the yaw angle in which to point the vehicle duing a travel command*/
- float altitude; /*< Altitude for the desired command*/
- uint16_t cmd_id; /*< id of this command, used for purposes of executing correct commands*/
- uint8_t cmd_type; /*< the type of the command, enumerated in TRACK_CMD*/
+ uint64_t timestamp_usec; ///< time since boot in usec of when the command was sent
+ double north; ///< North distance to travel in meters
+ double east; ///< East distance to travel in meters
+ float yaw_angle; ///< Yaw angle through which to rotate, or the yaw angle in which to point the vehicle duing a travel command
+ float altitude; ///< Altitude for the desired command
+ uint16_t cmd_id; ///< id of this command, used for purposes of executing correct commands
+ uint8_t cmd_type; ///< the type of the command, enumerated in TRACK_CMD
 } mavlink_tracking_cmd_t;
 
 #define MAVLINK_MSG_ID_TRACKING_CMD_LEN 35

@@ -4,11 +4,11 @@
 
 typedef struct __mavlink_apnt_site_status_t
 {
- uint64_t timestamp_usec; /*< timestamp (microseoncds since UNIX) from apnt??*/
- uint32_t site_id[4]; /*< tarray of up to 4 site id's*/
- float site_lat[4]; /*< latitude of up to 4 sites seen by apnt*/
- float site_lon[4]; /*< longitude of up to 4 sites seen by apnt*/
- uint16_t site_signal[4]; /*< signal infomation for each of the up to 4 sites seen by apnt*/
+ uint64_t timestamp_usec; ///< timestamp (microseoncds since UNIX) from apnt??
+ uint32_t site_id[4]; ///< tarray of up to 4 site id's
+ float site_lat[4]; ///< latitude of up to 4 sites seen by apnt
+ float site_lon[4]; ///< longitude of up to 4 sites seen by apnt
+ uint16_t site_signal[4]; ///< signal infomation for each of the up to 4 sites seen by apnt
 } mavlink_apnt_site_status_t;
 
 #define MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN 64

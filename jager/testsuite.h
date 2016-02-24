@@ -396,17 +396,15 @@ static void mavlink_test_rssi(uint8_t system_id, uint8_t component_id, mavlink_m
         uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
         uint16_t i;
 	mavlink_rssi_t packet_in = {
-		93372036854775807ULL,963497880,963498088,963498296,963498504,185.0,18691
+		963497464,45.0,963497880,963498088,129.0
     };
 	mavlink_rssi_t packet1, packet2;
         memset(&packet1, 0, sizeof(packet1));
-        	packet1.timestamp_usec = packet_in.timestamp_usec;
         	packet1.rssi_value = packet_in.rssi_value;
-        	packet1.rssi_value2 = packet_in.rssi_value2;
+        	packet1.heading = packet_in.heading;
         	packet1.lat = packet_in.lat;
         	packet1.lon = packet_in.lon;
         	packet1.alt = packet_in.alt;
-        	packet1.heading = packet_in.heading;
         
         
 
@@ -416,12 +414,12 @@ static void mavlink_test_rssi(uint8_t system_id, uint8_t component_id, mavlink_m
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_rssi_pack(system_id, component_id, &msg , packet1.timestamp_usec , packet1.rssi_value , packet1.rssi_value2 , packet1.heading , packet1.lat , packet1.lon , packet1.alt );
+	mavlink_msg_rssi_pack(system_id, component_id, &msg , packet1.rssi_value , packet1.heading , packet1.lat , packet1.lon , packet1.alt );
 	mavlink_msg_rssi_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_rssi_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.timestamp_usec , packet1.rssi_value , packet1.rssi_value2 , packet1.heading , packet1.lat , packet1.lon , packet1.alt );
+	mavlink_msg_rssi_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.rssi_value , packet1.heading , packet1.lat , packet1.lon , packet1.alt );
 	mavlink_msg_rssi_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
@@ -434,22 +432,21 @@ static void mavlink_test_rssi(uint8_t system_id, uint8_t component_id, mavlink_m
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
         
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_rssi_send(MAVLINK_COMM_1 , packet1.timestamp_usec , packet1.rssi_value , packet1.rssi_value2 , packet1.heading , packet1.lat , packet1.lon , packet1.alt );
+	mavlink_msg_rssi_send(MAVLINK_COMM_1 , packet1.rssi_value , packet1.heading , packet1.lat , packet1.lon , packet1.alt );
 	mavlink_msg_rssi_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 }
 
-static void mavlink_test_bearing_cc(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
+static void mavlink_test_bearing(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
 {
 	mavlink_message_t msg;
         uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
         uint16_t i;
-	mavlink_bearing_cc_t packet_in = {
-		93372036854775807ULL,179.0,963498296,963498504,185.0
+	mavlink_bearing_t packet_in = {
+		123.0,963497880,963498088,129.0
     };
-	mavlink_bearing_cc_t packet1, packet2;
+	mavlink_bearing_t packet1, packet2;
         memset(&packet1, 0, sizeof(packet1));
-        	packet1.timestamp_usec = packet_in.timestamp_usec;
         	packet1.bearing = packet_in.bearing;
         	packet1.lat = packet_in.lat;
         	packet1.lon = packet_in.lon;
@@ -458,65 +455,18 @@ static void mavlink_test_bearing_cc(uint8_t system_id, uint8_t component_id, mav
         
 
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_bearing_cc_encode(system_id, component_id, &msg, &packet1);
-	mavlink_msg_bearing_cc_decode(&msg, &packet2);
+	mavlink_msg_bearing_encode(system_id, component_id, &msg, &packet1);
+	mavlink_msg_bearing_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_bearing_cc_pack(system_id, component_id, &msg , packet1.timestamp_usec , packet1.bearing , packet1.lat , packet1.lon , packet1.alt );
-	mavlink_msg_bearing_cc_decode(&msg, &packet2);
+	mavlink_msg_bearing_pack(system_id, component_id, &msg , packet1.bearing , packet1.lat , packet1.lon , packet1.alt );
+	mavlink_msg_bearing_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_bearing_cc_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.timestamp_usec , packet1.bearing , packet1.lat , packet1.lon , packet1.alt );
-	mavlink_msg_bearing_cc_decode(&msg, &packet2);
-        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
-
-        memset(&packet2, 0, sizeof(packet2));
-        mavlink_msg_to_send_buffer(buffer, &msg);
-        for (i=0; i<mavlink_msg_get_send_buffer_length(&msg); i++) {
-        	comm_send_ch(MAVLINK_COMM_0, buffer[i]);
-        }
-	mavlink_msg_bearing_cc_decode(last_msg, &packet2);
-        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
-        
-        memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_bearing_cc_send(MAVLINK_COMM_1 , packet1.timestamp_usec , packet1.bearing , packet1.lat , packet1.lon , packet1.alt );
-	mavlink_msg_bearing_cc_decode(last_msg, &packet2);
-        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
-}
-
-static void mavlink_test_bearing_mle(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
-{
-	mavlink_message_t msg;
-        uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
-        uint16_t i;
-	mavlink_bearing_mle_t packet_in = {
-		93372036854775807ULL,179.0,963498296,963498504,185.0
-    };
-	mavlink_bearing_mle_t packet1, packet2;
-        memset(&packet1, 0, sizeof(packet1));
-        	packet1.timestamp_usec = packet_in.timestamp_usec;
-        	packet1.bearing = packet_in.bearing;
-        	packet1.lat = packet_in.lat;
-        	packet1.lon = packet_in.lon;
-        	packet1.alt = packet_in.alt;
-        
-        
-
-        memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_bearing_mle_encode(system_id, component_id, &msg, &packet1);
-	mavlink_msg_bearing_mle_decode(&msg, &packet2);
-        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
-
-        memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_bearing_mle_pack(system_id, component_id, &msg , packet1.timestamp_usec , packet1.bearing , packet1.lat , packet1.lon , packet1.alt );
-	mavlink_msg_bearing_mle_decode(&msg, &packet2);
-        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
-
-        memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_bearing_mle_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.timestamp_usec , packet1.bearing , packet1.lat , packet1.lon , packet1.alt );
-	mavlink_msg_bearing_mle_decode(&msg, &packet2);
+	mavlink_msg_bearing_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.bearing , packet1.lat , packet1.lon , packet1.alt );
+	mavlink_msg_bearing_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
@@ -524,12 +474,12 @@ static void mavlink_test_bearing_mle(uint8_t system_id, uint8_t component_id, ma
         for (i=0; i<mavlink_msg_get_send_buffer_length(&msg); i++) {
         	comm_send_ch(MAVLINK_COMM_0, buffer[i]);
         }
-	mavlink_msg_bearing_mle_decode(last_msg, &packet2);
+	mavlink_msg_bearing_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
         
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_bearing_mle_send(MAVLINK_COMM_1 , packet1.timestamp_usec , packet1.bearing , packet1.lat , packet1.lon , packet1.alt );
-	mavlink_msg_bearing_mle_decode(last_msg, &packet2);
+	mavlink_msg_bearing_send(MAVLINK_COMM_1 , packet1.bearing , packet1.lat , packet1.lon , packet1.alt );
+	mavlink_msg_bearing_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 }
 
@@ -544,8 +494,7 @@ static void mavlink_test_jager(uint8_t system_id, uint8_t component_id, mavlink_
 	mavlink_test_hunt_mission_reached(system_id, component_id, last_msg);
 	mavlink_test_system_time_usec(system_id, component_id, last_msg);
 	mavlink_test_rssi(system_id, component_id, last_msg);
-	mavlink_test_bearing_cc(system_id, component_id, last_msg);
-	mavlink_test_bearing_mle(system_id, component_id, last_msg);
+	mavlink_test_bearing(system_id, component_id, last_msg);
 }
 
 #ifdef __cplusplus

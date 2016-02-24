@@ -4,9 +4,9 @@
 
 typedef struct __mavlink_apnt_position_t
 {
- uint64_t timestamp_usec; /*< timestamp since boot in usec of the position information from apnt*/
- float apnt_lat; /*< latitude from apnt*/
- float apnt_lon; /*< longitude from apnt*/
+ uint64_t timestamp_usec; ///< timestamp since boot in usec of the position information from apnt
+ float apnt_lat; ///< latitude from apnt
+ float apnt_lon; ///< longitude from apnt
 } mavlink_apnt_position_t;
 
 #define MAVLINK_MSG_ID_APNT_POSITION_LEN 16
