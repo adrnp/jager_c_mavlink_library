@@ -2,7 +2,7 @@
 
 #define MAVLINK_MSG_ID_APNT_SITE_STATUS 202
 
-typedef struct MAVLINK_PACKED __mavlink_apnt_site_status_t
+typedef struct __mavlink_apnt_site_status_t
 {
  uint64_t timestamp_usec; /*< timestamp (microseoncds since UNIX) from apnt??*/
  uint32_t site_id[4]; /*< tarray of up to 4 site id's*/
@@ -12,9 +12,7 @@ typedef struct MAVLINK_PACKED __mavlink_apnt_site_status_t
 } mavlink_apnt_site_status_t;
 
 #define MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN 64
-#define MAVLINK_MSG_ID_APNT_SITE_STATUS_MIN_LEN 64
 #define MAVLINK_MSG_ID_202_LEN 64
-#define MAVLINK_MSG_ID_202_MIN_LEN 64
 
 #define MAVLINK_MSG_ID_APNT_SITE_STATUS_CRC 58
 #define MAVLINK_MSG_ID_202_CRC 58
@@ -24,19 +22,6 @@ typedef struct MAVLINK_PACKED __mavlink_apnt_site_status_t
 #define MAVLINK_MSG_APNT_SITE_STATUS_FIELD_SITE_LON_LEN 4
 #define MAVLINK_MSG_APNT_SITE_STATUS_FIELD_SITE_SIGNAL_LEN 4
 
-#if MAVLINK_COMMAND_24BIT
-#define MAVLINK_MESSAGE_INFO_APNT_SITE_STATUS { \
-	202, \
-	"APNT_SITE_STATUS", \
-	5, \
-	{  { "timestamp_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_apnt_site_status_t, timestamp_usec) }, \
-         { "site_id", NULL, MAVLINK_TYPE_UINT32_T, 4, 8, offsetof(mavlink_apnt_site_status_t, site_id) }, \
-         { "site_lat", NULL, MAVLINK_TYPE_FLOAT, 4, 24, offsetof(mavlink_apnt_site_status_t, site_lat) }, \
-         { "site_lon", NULL, MAVLINK_TYPE_FLOAT, 4, 40, offsetof(mavlink_apnt_site_status_t, site_lon) }, \
-         { "site_signal", NULL, MAVLINK_TYPE_UINT16_T, 4, 56, offsetof(mavlink_apnt_site_status_t, site_signal) }, \
-         } \
-}
-#else
 #define MAVLINK_MESSAGE_INFO_APNT_SITE_STATUS { \
 	"APNT_SITE_STATUS", \
 	5, \
@@ -47,7 +32,7 @@ typedef struct MAVLINK_PACKED __mavlink_apnt_site_status_t
          { "site_signal", NULL, MAVLINK_TYPE_UINT16_T, 4, 56, offsetof(mavlink_apnt_site_status_t, site_signal) }, \
          } \
 }
-#endif
+
 
 /**
  * @brief Pack a apnt_site_status message
@@ -84,7 +69,11 @@ static inline uint16_t mavlink_msg_apnt_site_status_pack(uint8_t system_id, uint
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_APNT_SITE_STATUS;
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_APNT_SITE_STATUS_MIN_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_CRC);
+#if MAVLINK_CRC_EXTRA
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_CRC);
+#else
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN);
+#endif
 }
 
 /**
@@ -123,7 +112,11 @@ static inline uint16_t mavlink_msg_apnt_site_status_pack_chan(uint8_t system_id,
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_APNT_SITE_STATUS;
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_APNT_SITE_STATUS_MIN_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_CRC);
+#if MAVLINK_CRC_EXTRA
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_CRC);
+#else
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN);
+#endif
 }
 
 /**
@@ -174,7 +167,11 @@ static inline void mavlink_msg_apnt_site_status_send(mavlink_channel_t chan, uin
 	_mav_put_float_array(buf, 24, site_lat, 4);
 	_mav_put_float_array(buf, 40, site_lon, 4);
 	_mav_put_uint16_t_array(buf, 56, site_signal, 4);
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_SITE_STATUS, buf, MAVLINK_MSG_ID_APNT_SITE_STATUS_MIN_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_CRC);
+#if MAVLINK_CRC_EXTRA
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_SITE_STATUS, buf, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_CRC);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_SITE_STATUS, buf, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN);
+#endif
 #else
 	mavlink_apnt_site_status_t packet;
 	packet.timestamp_usec = timestamp_usec;
@@ -182,21 +179,11 @@ static inline void mavlink_msg_apnt_site_status_send(mavlink_channel_t chan, uin
 	mav_array_memcpy(packet.site_lat, site_lat, sizeof(float)*4);
 	mav_array_memcpy(packet.site_lon, site_lon, sizeof(float)*4);
 	mav_array_memcpy(packet.site_signal, site_signal, sizeof(uint16_t)*4);
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_SITE_STATUS, (const char *)&packet, MAVLINK_MSG_ID_APNT_SITE_STATUS_MIN_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_CRC);
-#endif
-}
-
-/**
- * @brief Send a apnt_site_status message
- * @param chan MAVLink channel to send the message
- * @param struct The MAVLink struct to serialize
- */
-static inline void mavlink_msg_apnt_site_status_send_struct(mavlink_channel_t chan, const mavlink_apnt_site_status_t* apnt_site_status)
-{
-#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-    mavlink_msg_apnt_site_status_send(chan, apnt_site_status->timestamp_usec, apnt_site_status->site_id, apnt_site_status->site_lat, apnt_site_status->site_lon, apnt_site_status->site_signal);
+#if MAVLINK_CRC_EXTRA
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_SITE_STATUS, (const char *)&packet, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_CRC);
 #else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_SITE_STATUS, (const char *)apnt_site_status, MAVLINK_MSG_ID_APNT_SITE_STATUS_MIN_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_CRC);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_SITE_STATUS, (const char *)&packet, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN);
+#endif
 #endif
 }
 
@@ -217,7 +204,11 @@ static inline void mavlink_msg_apnt_site_status_send_buf(mavlink_message_t *msgb
 	_mav_put_float_array(buf, 24, site_lat, 4);
 	_mav_put_float_array(buf, 40, site_lon, 4);
 	_mav_put_uint16_t_array(buf, 56, site_signal, 4);
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_SITE_STATUS, buf, MAVLINK_MSG_ID_APNT_SITE_STATUS_MIN_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_CRC);
+#if MAVLINK_CRC_EXTRA
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_SITE_STATUS, buf, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_CRC);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_SITE_STATUS, buf, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN);
+#endif
 #else
 	mavlink_apnt_site_status_t *packet = (mavlink_apnt_site_status_t *)msgbuf;
 	packet->timestamp_usec = timestamp_usec;
@@ -225,7 +216,11 @@ static inline void mavlink_msg_apnt_site_status_send_buf(mavlink_message_t *msgb
 	mav_array_memcpy(packet->site_lat, site_lat, sizeof(float)*4);
 	mav_array_memcpy(packet->site_lon, site_lon, sizeof(float)*4);
 	mav_array_memcpy(packet->site_signal, site_signal, sizeof(uint16_t)*4);
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_SITE_STATUS, (const char *)packet, MAVLINK_MSG_ID_APNT_SITE_STATUS_MIN_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_CRC);
+#if MAVLINK_CRC_EXTRA
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_SITE_STATUS, (const char *)packet, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN, MAVLINK_MSG_ID_APNT_SITE_STATUS_CRC);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_SITE_STATUS, (const char *)packet, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN);
+#endif
 #endif
 }
 #endif
@@ -293,15 +288,13 @@ static inline uint16_t mavlink_msg_apnt_site_status_get_site_signal(const mavlin
  */
 static inline void mavlink_msg_apnt_site_status_decode(const mavlink_message_t* msg, mavlink_apnt_site_status_t* apnt_site_status)
 {
-#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+#if MAVLINK_NEED_BYTE_SWAP
 	apnt_site_status->timestamp_usec = mavlink_msg_apnt_site_status_get_timestamp_usec(msg);
 	mavlink_msg_apnt_site_status_get_site_id(msg, apnt_site_status->site_id);
 	mavlink_msg_apnt_site_status_get_site_lat(msg, apnt_site_status->site_lat);
 	mavlink_msg_apnt_site_status_get_site_lon(msg, apnt_site_status->site_lon);
 	mavlink_msg_apnt_site_status_get_site_signal(msg, apnt_site_status->site_signal);
 #else
-        uint8_t len = msg->len < MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN? msg->len : MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN;
-        memset(apnt_site_status, 0, MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN);
-	memcpy(apnt_site_status, _MAV_PAYLOAD(msg), len);
+	memcpy(apnt_site_status, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_APNT_SITE_STATUS_LEN);
 #endif
 }

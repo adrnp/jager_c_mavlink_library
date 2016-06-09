@@ -2,7 +2,7 @@
 
 #define MAVLINK_MSG_ID_TRACKING_CMD 211
 
-typedef struct MAVLINK_PACKED __mavlink_tracking_cmd_t
+typedef struct __mavlink_tracking_cmd_t
 {
  uint64_t timestamp_usec; /*< time since boot in usec of when the command was sent*/
  double north; /*< North distance to travel in meters*/
@@ -14,30 +14,13 @@ typedef struct MAVLINK_PACKED __mavlink_tracking_cmd_t
 } mavlink_tracking_cmd_t;
 
 #define MAVLINK_MSG_ID_TRACKING_CMD_LEN 35
-#define MAVLINK_MSG_ID_TRACKING_CMD_MIN_LEN 35
 #define MAVLINK_MSG_ID_211_LEN 35
-#define MAVLINK_MSG_ID_211_MIN_LEN 35
 
 #define MAVLINK_MSG_ID_TRACKING_CMD_CRC 62
 #define MAVLINK_MSG_ID_211_CRC 62
 
 
 
-#if MAVLINK_COMMAND_24BIT
-#define MAVLINK_MESSAGE_INFO_TRACKING_CMD { \
-	211, \
-	"TRACKING_CMD", \
-	7, \
-	{  { "timestamp_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_tracking_cmd_t, timestamp_usec) }, \
-         { "north", NULL, MAVLINK_TYPE_DOUBLE, 0, 8, offsetof(mavlink_tracking_cmd_t, north) }, \
-         { "east", NULL, MAVLINK_TYPE_DOUBLE, 0, 16, offsetof(mavlink_tracking_cmd_t, east) }, \
-         { "yaw_angle", NULL, MAVLINK_TYPE_FLOAT, 0, 24, offsetof(mavlink_tracking_cmd_t, yaw_angle) }, \
-         { "altitude", NULL, MAVLINK_TYPE_FLOAT, 0, 28, offsetof(mavlink_tracking_cmd_t, altitude) }, \
-         { "cmd_id", NULL, MAVLINK_TYPE_UINT16_T, 0, 32, offsetof(mavlink_tracking_cmd_t, cmd_id) }, \
-         { "cmd_type", NULL, MAVLINK_TYPE_UINT8_T, 0, 34, offsetof(mavlink_tracking_cmd_t, cmd_type) }, \
-         } \
-}
-#else
 #define MAVLINK_MESSAGE_INFO_TRACKING_CMD { \
 	"TRACKING_CMD", \
 	7, \
@@ -50,7 +33,7 @@ typedef struct MAVLINK_PACKED __mavlink_tracking_cmd_t
          { "cmd_type", NULL, MAVLINK_TYPE_UINT8_T, 0, 34, offsetof(mavlink_tracking_cmd_t, cmd_type) }, \
          } \
 }
-#endif
+
 
 /**
  * @brief Pack a tracking_cmd message
@@ -95,7 +78,11 @@ static inline uint16_t mavlink_msg_tracking_cmd_pack(uint8_t system_id, uint8_t 
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_TRACKING_CMD;
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_TRACKING_CMD_MIN_LEN, MAVLINK_MSG_ID_TRACKING_CMD_LEN, MAVLINK_MSG_ID_TRACKING_CMD_CRC);
+#if MAVLINK_CRC_EXTRA
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_TRACKING_CMD_LEN, MAVLINK_MSG_ID_TRACKING_CMD_CRC);
+#else
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_TRACKING_CMD_LEN);
+#endif
 }
 
 /**
@@ -142,7 +129,11 @@ static inline uint16_t mavlink_msg_tracking_cmd_pack_chan(uint8_t system_id, uin
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_TRACKING_CMD;
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_TRACKING_CMD_MIN_LEN, MAVLINK_MSG_ID_TRACKING_CMD_LEN, MAVLINK_MSG_ID_TRACKING_CMD_CRC);
+#if MAVLINK_CRC_EXTRA
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_TRACKING_CMD_LEN, MAVLINK_MSG_ID_TRACKING_CMD_CRC);
+#else
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_TRACKING_CMD_LEN);
+#endif
 }
 
 /**
@@ -198,7 +189,11 @@ static inline void mavlink_msg_tracking_cmd_send(mavlink_channel_t chan, uint64_
 	_mav_put_uint16_t(buf, 32, cmd_id);
 	_mav_put_uint8_t(buf, 34, cmd_type);
 
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_CMD, buf, MAVLINK_MSG_ID_TRACKING_CMD_MIN_LEN, MAVLINK_MSG_ID_TRACKING_CMD_LEN, MAVLINK_MSG_ID_TRACKING_CMD_CRC);
+#if MAVLINK_CRC_EXTRA
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_CMD, buf, MAVLINK_MSG_ID_TRACKING_CMD_LEN, MAVLINK_MSG_ID_TRACKING_CMD_CRC);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_CMD, buf, MAVLINK_MSG_ID_TRACKING_CMD_LEN);
+#endif
 #else
 	mavlink_tracking_cmd_t packet;
 	packet.timestamp_usec = timestamp_usec;
@@ -209,21 +204,11 @@ static inline void mavlink_msg_tracking_cmd_send(mavlink_channel_t chan, uint64_
 	packet.cmd_id = cmd_id;
 	packet.cmd_type = cmd_type;
 
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_CMD, (const char *)&packet, MAVLINK_MSG_ID_TRACKING_CMD_MIN_LEN, MAVLINK_MSG_ID_TRACKING_CMD_LEN, MAVLINK_MSG_ID_TRACKING_CMD_CRC);
-#endif
-}
-
-/**
- * @brief Send a tracking_cmd message
- * @param chan MAVLink channel to send the message
- * @param struct The MAVLink struct to serialize
- */
-static inline void mavlink_msg_tracking_cmd_send_struct(mavlink_channel_t chan, const mavlink_tracking_cmd_t* tracking_cmd)
-{
-#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-    mavlink_msg_tracking_cmd_send(chan, tracking_cmd->timestamp_usec, tracking_cmd->cmd_id, tracking_cmd->cmd_type, tracking_cmd->north, tracking_cmd->east, tracking_cmd->yaw_angle, tracking_cmd->altitude);
+#if MAVLINK_CRC_EXTRA
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_CMD, (const char *)&packet, MAVLINK_MSG_ID_TRACKING_CMD_LEN, MAVLINK_MSG_ID_TRACKING_CMD_CRC);
 #else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_CMD, (const char *)tracking_cmd, MAVLINK_MSG_ID_TRACKING_CMD_MIN_LEN, MAVLINK_MSG_ID_TRACKING_CMD_LEN, MAVLINK_MSG_ID_TRACKING_CMD_CRC);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_CMD, (const char *)&packet, MAVLINK_MSG_ID_TRACKING_CMD_LEN);
+#endif
 #endif
 }
 
@@ -247,7 +232,11 @@ static inline void mavlink_msg_tracking_cmd_send_buf(mavlink_message_t *msgbuf, 
 	_mav_put_uint16_t(buf, 32, cmd_id);
 	_mav_put_uint8_t(buf, 34, cmd_type);
 
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_CMD, buf, MAVLINK_MSG_ID_TRACKING_CMD_MIN_LEN, MAVLINK_MSG_ID_TRACKING_CMD_LEN, MAVLINK_MSG_ID_TRACKING_CMD_CRC);
+#if MAVLINK_CRC_EXTRA
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_CMD, buf, MAVLINK_MSG_ID_TRACKING_CMD_LEN, MAVLINK_MSG_ID_TRACKING_CMD_CRC);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_CMD, buf, MAVLINK_MSG_ID_TRACKING_CMD_LEN);
+#endif
 #else
 	mavlink_tracking_cmd_t *packet = (mavlink_tracking_cmd_t *)msgbuf;
 	packet->timestamp_usec = timestamp_usec;
@@ -258,7 +247,11 @@ static inline void mavlink_msg_tracking_cmd_send_buf(mavlink_message_t *msgbuf, 
 	packet->cmd_id = cmd_id;
 	packet->cmd_type = cmd_type;
 
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_CMD, (const char *)packet, MAVLINK_MSG_ID_TRACKING_CMD_MIN_LEN, MAVLINK_MSG_ID_TRACKING_CMD_LEN, MAVLINK_MSG_ID_TRACKING_CMD_CRC);
+#if MAVLINK_CRC_EXTRA
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_CMD, (const char *)packet, MAVLINK_MSG_ID_TRACKING_CMD_LEN, MAVLINK_MSG_ID_TRACKING_CMD_CRC);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_CMD, (const char *)packet, MAVLINK_MSG_ID_TRACKING_CMD_LEN);
+#endif
 #endif
 }
 #endif
@@ -346,7 +339,7 @@ static inline float mavlink_msg_tracking_cmd_get_altitude(const mavlink_message_
  */
 static inline void mavlink_msg_tracking_cmd_decode(const mavlink_message_t* msg, mavlink_tracking_cmd_t* tracking_cmd)
 {
-#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+#if MAVLINK_NEED_BYTE_SWAP
 	tracking_cmd->timestamp_usec = mavlink_msg_tracking_cmd_get_timestamp_usec(msg);
 	tracking_cmd->north = mavlink_msg_tracking_cmd_get_north(msg);
 	tracking_cmd->east = mavlink_msg_tracking_cmd_get_east(msg);
@@ -355,8 +348,6 @@ static inline void mavlink_msg_tracking_cmd_decode(const mavlink_message_t* msg,
 	tracking_cmd->cmd_id = mavlink_msg_tracking_cmd_get_cmd_id(msg);
 	tracking_cmd->cmd_type = mavlink_msg_tracking_cmd_get_cmd_type(msg);
 #else
-        uint8_t len = msg->len < MAVLINK_MSG_ID_TRACKING_CMD_LEN? msg->len : MAVLINK_MSG_ID_TRACKING_CMD_LEN;
-        memset(tracking_cmd, 0, MAVLINK_MSG_ID_TRACKING_CMD_LEN);
-	memcpy(tracking_cmd, _MAV_PAYLOAD(msg), len);
+	memcpy(tracking_cmd, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_TRACKING_CMD_LEN);
 #endif
 }
