@@ -2,7 +2,7 @@
 
 #define MAVLINK_MSG_ID_BEARING_MLE 217
 
-typedef struct __mavlink_bearing_mle_t
+typedef struct MAVLINK_PACKED __mavlink_bearing_mle_t
 {
  uint64_t timestamp_usec; /*< The timestamp of the measurement (from the pixhawk)*/
  double bearing; /*< The calculated bearing*/
@@ -12,13 +12,28 @@ typedef struct __mavlink_bearing_mle_t
 } mavlink_bearing_mle_t;
 
 #define MAVLINK_MSG_ID_BEARING_MLE_LEN 28
+#define MAVLINK_MSG_ID_BEARING_MLE_MIN_LEN 28
 #define MAVLINK_MSG_ID_217_LEN 28
+#define MAVLINK_MSG_ID_217_MIN_LEN 28
 
 #define MAVLINK_MSG_ID_BEARING_MLE_CRC 247
 #define MAVLINK_MSG_ID_217_CRC 247
 
 
 
+#if MAVLINK_COMMAND_24BIT
+#define MAVLINK_MESSAGE_INFO_BEARING_MLE { \
+	217, \
+	"BEARING_MLE", \
+	5, \
+	{  { "timestamp_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_bearing_mle_t, timestamp_usec) }, \
+         { "bearing", NULL, MAVLINK_TYPE_DOUBLE, 0, 8, offsetof(mavlink_bearing_mle_t, bearing) }, \
+         { "lat", NULL, MAVLINK_TYPE_INT32_T, 0, 16, offsetof(mavlink_bearing_mle_t, lat) }, \
+         { "lon", NULL, MAVLINK_TYPE_INT32_T, 0, 20, offsetof(mavlink_bearing_mle_t, lon) }, \
+         { "alt", NULL, MAVLINK_TYPE_FLOAT, 0, 24, offsetof(mavlink_bearing_mle_t, alt) }, \
+         } \
+}
+#else
 #define MAVLINK_MESSAGE_INFO_BEARING_MLE { \
 	"BEARING_MLE", \
 	5, \
@@ -29,7 +44,7 @@ typedef struct __mavlink_bearing_mle_t
          { "alt", NULL, MAVLINK_TYPE_FLOAT, 0, 24, offsetof(mavlink_bearing_mle_t, alt) }, \
          } \
 }
-
+#endif
 
 /**
  * @brief Pack a bearing_mle message
@@ -68,11 +83,7 @@ static inline uint16_t mavlink_msg_bearing_mle_pack(uint8_t system_id, uint8_t c
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_BEARING_MLE;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_BEARING_MLE_LEN, MAVLINK_MSG_ID_BEARING_MLE_CRC);
-#else
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_BEARING_MLE_LEN);
-#endif
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_BEARING_MLE_MIN_LEN, MAVLINK_MSG_ID_BEARING_MLE_LEN, MAVLINK_MSG_ID_BEARING_MLE_CRC);
 }
 
 /**
@@ -113,11 +124,7 @@ static inline uint16_t mavlink_msg_bearing_mle_pack_chan(uint8_t system_id, uint
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_BEARING_MLE;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_BEARING_MLE_LEN, MAVLINK_MSG_ID_BEARING_MLE_CRC);
-#else
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_BEARING_MLE_LEN);
-#endif
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_BEARING_MLE_MIN_LEN, MAVLINK_MSG_ID_BEARING_MLE_LEN, MAVLINK_MSG_ID_BEARING_MLE_CRC);
 }
 
 /**
@@ -169,11 +176,7 @@ static inline void mavlink_msg_bearing_mle_send(mavlink_channel_t chan, uint64_t
 	_mav_put_int32_t(buf, 20, lon);
 	_mav_put_float(buf, 24, alt);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_BEARING_MLE, buf, MAVLINK_MSG_ID_BEARING_MLE_LEN, MAVLINK_MSG_ID_BEARING_MLE_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_BEARING_MLE, buf, MAVLINK_MSG_ID_BEARING_MLE_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_BEARING_MLE, buf, MAVLINK_MSG_ID_BEARING_MLE_MIN_LEN, MAVLINK_MSG_ID_BEARING_MLE_LEN, MAVLINK_MSG_ID_BEARING_MLE_CRC);
 #else
 	mavlink_bearing_mle_t packet;
 	packet.timestamp_usec = timestamp_usec;
@@ -182,11 +185,21 @@ static inline void mavlink_msg_bearing_mle_send(mavlink_channel_t chan, uint64_t
 	packet.lon = lon;
 	packet.alt = alt;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_BEARING_MLE, (const char *)&packet, MAVLINK_MSG_ID_BEARING_MLE_LEN, MAVLINK_MSG_ID_BEARING_MLE_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_BEARING_MLE, (const char *)&packet, MAVLINK_MSG_ID_BEARING_MLE_LEN);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_BEARING_MLE, (const char *)&packet, MAVLINK_MSG_ID_BEARING_MLE_MIN_LEN, MAVLINK_MSG_ID_BEARING_MLE_LEN, MAVLINK_MSG_ID_BEARING_MLE_CRC);
 #endif
+}
+
+/**
+ * @brief Send a bearing_mle message
+ * @param chan MAVLink channel to send the message
+ * @param struct The MAVLink struct to serialize
+ */
+static inline void mavlink_msg_bearing_mle_send_struct(mavlink_channel_t chan, const mavlink_bearing_mle_t* bearing_mle)
+{
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    mavlink_msg_bearing_mle_send(chan, bearing_mle->timestamp_usec, bearing_mle->bearing, bearing_mle->lat, bearing_mle->lon, bearing_mle->alt);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_BEARING_MLE, (const char *)bearing_mle, MAVLINK_MSG_ID_BEARING_MLE_MIN_LEN, MAVLINK_MSG_ID_BEARING_MLE_LEN, MAVLINK_MSG_ID_BEARING_MLE_CRC);
 #endif
 }
 
@@ -208,11 +221,7 @@ static inline void mavlink_msg_bearing_mle_send_buf(mavlink_message_t *msgbuf, m
 	_mav_put_int32_t(buf, 20, lon);
 	_mav_put_float(buf, 24, alt);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_BEARING_MLE, buf, MAVLINK_MSG_ID_BEARING_MLE_LEN, MAVLINK_MSG_ID_BEARING_MLE_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_BEARING_MLE, buf, MAVLINK_MSG_ID_BEARING_MLE_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_BEARING_MLE, buf, MAVLINK_MSG_ID_BEARING_MLE_MIN_LEN, MAVLINK_MSG_ID_BEARING_MLE_LEN, MAVLINK_MSG_ID_BEARING_MLE_CRC);
 #else
 	mavlink_bearing_mle_t *packet = (mavlink_bearing_mle_t *)msgbuf;
 	packet->timestamp_usec = timestamp_usec;
@@ -221,11 +230,7 @@ static inline void mavlink_msg_bearing_mle_send_buf(mavlink_message_t *msgbuf, m
 	packet->lon = lon;
 	packet->alt = alt;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_BEARING_MLE, (const char *)packet, MAVLINK_MSG_ID_BEARING_MLE_LEN, MAVLINK_MSG_ID_BEARING_MLE_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_BEARING_MLE, (const char *)packet, MAVLINK_MSG_ID_BEARING_MLE_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_BEARING_MLE, (const char *)packet, MAVLINK_MSG_ID_BEARING_MLE_MIN_LEN, MAVLINK_MSG_ID_BEARING_MLE_LEN, MAVLINK_MSG_ID_BEARING_MLE_CRC);
 #endif
 }
 #endif
@@ -293,13 +298,15 @@ static inline float mavlink_msg_bearing_mle_get_alt(const mavlink_message_t* msg
  */
 static inline void mavlink_msg_bearing_mle_decode(const mavlink_message_t* msg, mavlink_bearing_mle_t* bearing_mle)
 {
-#if MAVLINK_NEED_BYTE_SWAP
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	bearing_mle->timestamp_usec = mavlink_msg_bearing_mle_get_timestamp_usec(msg);
 	bearing_mle->bearing = mavlink_msg_bearing_mle_get_bearing(msg);
 	bearing_mle->lat = mavlink_msg_bearing_mle_get_lat(msg);
 	bearing_mle->lon = mavlink_msg_bearing_mle_get_lon(msg);
 	bearing_mle->alt = mavlink_msg_bearing_mle_get_alt(msg);
 #else
-	memcpy(bearing_mle, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_BEARING_MLE_LEN);
+        uint8_t len = msg->len < MAVLINK_MSG_ID_BEARING_MLE_LEN? msg->len : MAVLINK_MSG_ID_BEARING_MLE_LEN;
+        memset(bearing_mle, 0, MAVLINK_MSG_ID_BEARING_MLE_LEN);
+	memcpy(bearing_mle, _MAV_PAYLOAD(msg), len);
 #endif
 }

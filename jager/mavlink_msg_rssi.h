@@ -2,7 +2,7 @@
 
 #define MAVLINK_MSG_ID_RSSI 215
 
-typedef struct __mavlink_rssi_t
+typedef struct MAVLINK_PACKED __mavlink_rssi_t
 {
  uint64_t timestamp_usec; /*< The timestamp of the measurement (from the pixhawk)*/
  int32_t rssi_value; /*< The rssi value measured*/
@@ -14,13 +14,30 @@ typedef struct __mavlink_rssi_t
 } mavlink_rssi_t;
 
 #define MAVLINK_MSG_ID_RSSI_LEN 30
+#define MAVLINK_MSG_ID_RSSI_MIN_LEN 30
 #define MAVLINK_MSG_ID_215_LEN 30
+#define MAVLINK_MSG_ID_215_MIN_LEN 30
 
 #define MAVLINK_MSG_ID_RSSI_CRC 227
 #define MAVLINK_MSG_ID_215_CRC 227
 
 
 
+#if MAVLINK_COMMAND_24BIT
+#define MAVLINK_MESSAGE_INFO_RSSI { \
+	215, \
+	"RSSI", \
+	7, \
+	{  { "timestamp_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_rssi_t, timestamp_usec) }, \
+         { "rssi_value", NULL, MAVLINK_TYPE_INT32_T, 0, 8, offsetof(mavlink_rssi_t, rssi_value) }, \
+         { "rssi_value2", NULL, MAVLINK_TYPE_INT32_T, 0, 12, offsetof(mavlink_rssi_t, rssi_value2) }, \
+         { "lat", NULL, MAVLINK_TYPE_INT32_T, 0, 16, offsetof(mavlink_rssi_t, lat) }, \
+         { "lon", NULL, MAVLINK_TYPE_INT32_T, 0, 20, offsetof(mavlink_rssi_t, lon) }, \
+         { "alt", NULL, MAVLINK_TYPE_FLOAT, 0, 24, offsetof(mavlink_rssi_t, alt) }, \
+         { "heading", NULL, MAVLINK_TYPE_INT16_T, 0, 28, offsetof(mavlink_rssi_t, heading) }, \
+         } \
+}
+#else
 #define MAVLINK_MESSAGE_INFO_RSSI { \
 	"RSSI", \
 	7, \
@@ -33,7 +50,7 @@ typedef struct __mavlink_rssi_t
          { "heading", NULL, MAVLINK_TYPE_INT16_T, 0, 28, offsetof(mavlink_rssi_t, heading) }, \
          } \
 }
-
+#endif
 
 /**
  * @brief Pack a rssi message
@@ -78,11 +95,7 @@ static inline uint16_t mavlink_msg_rssi_pack(uint8_t system_id, uint8_t componen
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_RSSI;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_RSSI_LEN, MAVLINK_MSG_ID_RSSI_CRC);
-#else
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_RSSI_LEN);
-#endif
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_RSSI_MIN_LEN, MAVLINK_MSG_ID_RSSI_LEN, MAVLINK_MSG_ID_RSSI_CRC);
 }
 
 /**
@@ -129,11 +142,7 @@ static inline uint16_t mavlink_msg_rssi_pack_chan(uint8_t system_id, uint8_t com
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_RSSI;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_RSSI_LEN, MAVLINK_MSG_ID_RSSI_CRC);
-#else
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_RSSI_LEN);
-#endif
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_RSSI_MIN_LEN, MAVLINK_MSG_ID_RSSI_LEN, MAVLINK_MSG_ID_RSSI_CRC);
 }
 
 /**
@@ -189,11 +198,7 @@ static inline void mavlink_msg_rssi_send(mavlink_channel_t chan, uint64_t timest
 	_mav_put_float(buf, 24, alt);
 	_mav_put_int16_t(buf, 28, heading);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RSSI, buf, MAVLINK_MSG_ID_RSSI_LEN, MAVLINK_MSG_ID_RSSI_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RSSI, buf, MAVLINK_MSG_ID_RSSI_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RSSI, buf, MAVLINK_MSG_ID_RSSI_MIN_LEN, MAVLINK_MSG_ID_RSSI_LEN, MAVLINK_MSG_ID_RSSI_CRC);
 #else
 	mavlink_rssi_t packet;
 	packet.timestamp_usec = timestamp_usec;
@@ -204,11 +209,21 @@ static inline void mavlink_msg_rssi_send(mavlink_channel_t chan, uint64_t timest
 	packet.alt = alt;
 	packet.heading = heading;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RSSI, (const char *)&packet, MAVLINK_MSG_ID_RSSI_LEN, MAVLINK_MSG_ID_RSSI_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RSSI, (const char *)&packet, MAVLINK_MSG_ID_RSSI_LEN);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RSSI, (const char *)&packet, MAVLINK_MSG_ID_RSSI_MIN_LEN, MAVLINK_MSG_ID_RSSI_LEN, MAVLINK_MSG_ID_RSSI_CRC);
 #endif
+}
+
+/**
+ * @brief Send a rssi message
+ * @param chan MAVLink channel to send the message
+ * @param struct The MAVLink struct to serialize
+ */
+static inline void mavlink_msg_rssi_send_struct(mavlink_channel_t chan, const mavlink_rssi_t* rssi)
+{
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    mavlink_msg_rssi_send(chan, rssi->timestamp_usec, rssi->rssi_value, rssi->rssi_value2, rssi->heading, rssi->lat, rssi->lon, rssi->alt);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RSSI, (const char *)rssi, MAVLINK_MSG_ID_RSSI_MIN_LEN, MAVLINK_MSG_ID_RSSI_LEN, MAVLINK_MSG_ID_RSSI_CRC);
 #endif
 }
 
@@ -232,11 +247,7 @@ static inline void mavlink_msg_rssi_send_buf(mavlink_message_t *msgbuf, mavlink_
 	_mav_put_float(buf, 24, alt);
 	_mav_put_int16_t(buf, 28, heading);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RSSI, buf, MAVLINK_MSG_ID_RSSI_LEN, MAVLINK_MSG_ID_RSSI_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RSSI, buf, MAVLINK_MSG_ID_RSSI_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RSSI, buf, MAVLINK_MSG_ID_RSSI_MIN_LEN, MAVLINK_MSG_ID_RSSI_LEN, MAVLINK_MSG_ID_RSSI_CRC);
 #else
 	mavlink_rssi_t *packet = (mavlink_rssi_t *)msgbuf;
 	packet->timestamp_usec = timestamp_usec;
@@ -247,11 +258,7 @@ static inline void mavlink_msg_rssi_send_buf(mavlink_message_t *msgbuf, mavlink_
 	packet->alt = alt;
 	packet->heading = heading;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RSSI, (const char *)packet, MAVLINK_MSG_ID_RSSI_LEN, MAVLINK_MSG_ID_RSSI_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RSSI, (const char *)packet, MAVLINK_MSG_ID_RSSI_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RSSI, (const char *)packet, MAVLINK_MSG_ID_RSSI_MIN_LEN, MAVLINK_MSG_ID_RSSI_LEN, MAVLINK_MSG_ID_RSSI_CRC);
 #endif
 }
 #endif
@@ -339,7 +346,7 @@ static inline float mavlink_msg_rssi_get_alt(const mavlink_message_t* msg)
  */
 static inline void mavlink_msg_rssi_decode(const mavlink_message_t* msg, mavlink_rssi_t* rssi)
 {
-#if MAVLINK_NEED_BYTE_SWAP
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	rssi->timestamp_usec = mavlink_msg_rssi_get_timestamp_usec(msg);
 	rssi->rssi_value = mavlink_msg_rssi_get_rssi_value(msg);
 	rssi->rssi_value2 = mavlink_msg_rssi_get_rssi_value2(msg);
@@ -348,6 +355,8 @@ static inline void mavlink_msg_rssi_decode(const mavlink_message_t* msg, mavlink
 	rssi->alt = mavlink_msg_rssi_get_alt(msg);
 	rssi->heading = mavlink_msg_rssi_get_heading(msg);
 #else
-	memcpy(rssi, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_RSSI_LEN);
+        uint8_t len = msg->len < MAVLINK_MSG_ID_RSSI_LEN? msg->len : MAVLINK_MSG_ID_RSSI_LEN;
+        memset(rssi, 0, MAVLINK_MSG_ID_RSSI_LEN);
+	memcpy(rssi, _MAV_PAYLOAD(msg), len);
 #endif
 }

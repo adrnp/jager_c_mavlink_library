@@ -2,7 +2,7 @@
 
 #define MAVLINK_MSG_ID_TRACKING_STATUS 210
 
-typedef struct __mavlink_tracking_status_t
+typedef struct MAVLINK_PACKED __mavlink_tracking_status_t
 {
  uint64_t timestamp_usec; /*< time since boot in usec of last update from the tracking computer*/
  uint8_t computer_status; /*< current tracking status, see tracking status enum*/
@@ -10,13 +10,26 @@ typedef struct __mavlink_tracking_status_t
 } mavlink_tracking_status_t;
 
 #define MAVLINK_MSG_ID_TRACKING_STATUS_LEN 10
+#define MAVLINK_MSG_ID_TRACKING_STATUS_MIN_LEN 10
 #define MAVLINK_MSG_ID_210_LEN 10
+#define MAVLINK_MSG_ID_210_MIN_LEN 10
 
 #define MAVLINK_MSG_ID_TRACKING_STATUS_CRC 8
 #define MAVLINK_MSG_ID_210_CRC 8
 
 
 
+#if MAVLINK_COMMAND_24BIT
+#define MAVLINK_MESSAGE_INFO_TRACKING_STATUS { \
+	210, \
+	"TRACKING_STATUS", \
+	3, \
+	{  { "timestamp_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_tracking_status_t, timestamp_usec) }, \
+         { "computer_status", NULL, MAVLINK_TYPE_UINT8_T, 0, 8, offsetof(mavlink_tracking_status_t, computer_status) }, \
+         { "hunt_mode_state", NULL, MAVLINK_TYPE_UINT8_T, 0, 9, offsetof(mavlink_tracking_status_t, hunt_mode_state) }, \
+         } \
+}
+#else
 #define MAVLINK_MESSAGE_INFO_TRACKING_STATUS { \
 	"TRACKING_STATUS", \
 	3, \
@@ -25,7 +38,7 @@ typedef struct __mavlink_tracking_status_t
          { "hunt_mode_state", NULL, MAVLINK_TYPE_UINT8_T, 0, 9, offsetof(mavlink_tracking_status_t, hunt_mode_state) }, \
          } \
 }
-
+#endif
 
 /**
  * @brief Pack a tracking_status message
@@ -58,11 +71,7 @@ static inline uint16_t mavlink_msg_tracking_status_pack(uint8_t system_id, uint8
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_TRACKING_STATUS;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_TRACKING_STATUS_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_CRC);
-#else
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_TRACKING_STATUS_LEN);
-#endif
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_TRACKING_STATUS_MIN_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_CRC);
 }
 
 /**
@@ -97,11 +106,7 @@ static inline uint16_t mavlink_msg_tracking_status_pack_chan(uint8_t system_id, 
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_TRACKING_STATUS;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_TRACKING_STATUS_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_CRC);
-#else
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_TRACKING_STATUS_LEN);
-#endif
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_TRACKING_STATUS_MIN_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_CRC);
 }
 
 /**
@@ -149,22 +154,28 @@ static inline void mavlink_msg_tracking_status_send(mavlink_channel_t chan, uint
 	_mav_put_uint8_t(buf, 8, computer_status);
 	_mav_put_uint8_t(buf, 9, hunt_mode_state);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_STATUS, buf, MAVLINK_MSG_ID_TRACKING_STATUS_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_STATUS, buf, MAVLINK_MSG_ID_TRACKING_STATUS_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_STATUS, buf, MAVLINK_MSG_ID_TRACKING_STATUS_MIN_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_CRC);
 #else
 	mavlink_tracking_status_t packet;
 	packet.timestamp_usec = timestamp_usec;
 	packet.computer_status = computer_status;
 	packet.hunt_mode_state = hunt_mode_state;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_STATUS, (const char *)&packet, MAVLINK_MSG_ID_TRACKING_STATUS_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_STATUS, (const char *)&packet, MAVLINK_MSG_ID_TRACKING_STATUS_LEN);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_STATUS, (const char *)&packet, MAVLINK_MSG_ID_TRACKING_STATUS_MIN_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_CRC);
 #endif
+}
+
+/**
+ * @brief Send a tracking_status message
+ * @param chan MAVLink channel to send the message
+ * @param struct The MAVLink struct to serialize
+ */
+static inline void mavlink_msg_tracking_status_send_struct(mavlink_channel_t chan, const mavlink_tracking_status_t* tracking_status)
+{
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    mavlink_msg_tracking_status_send(chan, tracking_status->timestamp_usec, tracking_status->computer_status, tracking_status->hunt_mode_state);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_STATUS, (const char *)tracking_status, MAVLINK_MSG_ID_TRACKING_STATUS_MIN_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_CRC);
 #endif
 }
 
@@ -184,22 +195,14 @@ static inline void mavlink_msg_tracking_status_send_buf(mavlink_message_t *msgbu
 	_mav_put_uint8_t(buf, 8, computer_status);
 	_mav_put_uint8_t(buf, 9, hunt_mode_state);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_STATUS, buf, MAVLINK_MSG_ID_TRACKING_STATUS_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_STATUS, buf, MAVLINK_MSG_ID_TRACKING_STATUS_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_STATUS, buf, MAVLINK_MSG_ID_TRACKING_STATUS_MIN_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_CRC);
 #else
 	mavlink_tracking_status_t *packet = (mavlink_tracking_status_t *)msgbuf;
 	packet->timestamp_usec = timestamp_usec;
 	packet->computer_status = computer_status;
 	packet->hunt_mode_state = hunt_mode_state;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_STATUS, (const char *)packet, MAVLINK_MSG_ID_TRACKING_STATUS_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_STATUS, (const char *)packet, MAVLINK_MSG_ID_TRACKING_STATUS_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_TRACKING_STATUS, (const char *)packet, MAVLINK_MSG_ID_TRACKING_STATUS_MIN_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_LEN, MAVLINK_MSG_ID_TRACKING_STATUS_CRC);
 #endif
 }
 #endif
@@ -247,11 +250,13 @@ static inline uint8_t mavlink_msg_tracking_status_get_hunt_mode_state(const mavl
  */
 static inline void mavlink_msg_tracking_status_decode(const mavlink_message_t* msg, mavlink_tracking_status_t* tracking_status)
 {
-#if MAVLINK_NEED_BYTE_SWAP
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	tracking_status->timestamp_usec = mavlink_msg_tracking_status_get_timestamp_usec(msg);
 	tracking_status->computer_status = mavlink_msg_tracking_status_get_computer_status(msg);
 	tracking_status->hunt_mode_state = mavlink_msg_tracking_status_get_hunt_mode_state(msg);
 #else
-	memcpy(tracking_status, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_TRACKING_STATUS_LEN);
+        uint8_t len = msg->len < MAVLINK_MSG_ID_TRACKING_STATUS_LEN? msg->len : MAVLINK_MSG_ID_TRACKING_STATUS_LEN;
+        memset(tracking_status, 0, MAVLINK_MSG_ID_TRACKING_STATUS_LEN);
+	memcpy(tracking_status, _MAV_PAYLOAD(msg), len);
 #endif
 }

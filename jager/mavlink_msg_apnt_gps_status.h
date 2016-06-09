@@ -2,7 +2,7 @@
 
 #define MAVLINK_MSG_ID_APNT_GPS_STATUS 201
 
-typedef struct __mavlink_apnt_gps_status_t
+typedef struct MAVLINK_PACKED __mavlink_apnt_gps_status_t
 {
  uint64_t timestamp_usec; /*< timestamp (microseconds since UNIX) from gps?*/
  float gps_lat; /*< latitude from apnt gps*/
@@ -15,7 +15,9 @@ typedef struct __mavlink_apnt_gps_status_t
 } mavlink_apnt_gps_status_t;
 
 #define MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN 60
+#define MAVLINK_MSG_ID_APNT_GPS_STATUS_MIN_LEN 60
 #define MAVLINK_MSG_ID_201_LEN 60
+#define MAVLINK_MSG_ID_201_MIN_LEN 60
 
 #define MAVLINK_MSG_ID_APNT_GPS_STATUS_CRC 225
 #define MAVLINK_MSG_ID_201_CRC 225
@@ -25,6 +27,22 @@ typedef struct __mavlink_apnt_gps_status_t
 #define MAVLINK_MSG_APNT_GPS_STATUS_FIELD_ELEVATION_LEN 8
 #define MAVLINK_MSG_APNT_GPS_STATUS_FIELD_SNR_LEN 8
 
+#if MAVLINK_COMMAND_24BIT
+#define MAVLINK_MESSAGE_INFO_APNT_GPS_STATUS { \
+	201, \
+	"APNT_GPS_STATUS", \
+	8, \
+	{  { "timestamp_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_apnt_gps_status_t, timestamp_usec) }, \
+         { "gps_lat", NULL, MAVLINK_TYPE_FLOAT, 0, 8, offsetof(mavlink_apnt_gps_status_t, gps_lat) }, \
+         { "gps_lon", NULL, MAVLINK_TYPE_FLOAT, 0, 12, offsetof(mavlink_apnt_gps_status_t, gps_lon) }, \
+         { "gps_alt", NULL, MAVLINK_TYPE_FLOAT, 0, 16, offsetof(mavlink_apnt_gps_status_t, gps_alt) }, \
+         { "azimuth", NULL, MAVLINK_TYPE_INT16_T, 8, 20, offsetof(mavlink_apnt_gps_status_t, azimuth) }, \
+         { "prn", NULL, MAVLINK_TYPE_UINT8_T, 8, 36, offsetof(mavlink_apnt_gps_status_t, prn) }, \
+         { "elevation", NULL, MAVLINK_TYPE_UINT8_T, 8, 44, offsetof(mavlink_apnt_gps_status_t, elevation) }, \
+         { "snr", NULL, MAVLINK_TYPE_UINT8_T, 8, 52, offsetof(mavlink_apnt_gps_status_t, snr) }, \
+         } \
+}
+#else
 #define MAVLINK_MESSAGE_INFO_APNT_GPS_STATUS { \
 	"APNT_GPS_STATUS", \
 	8, \
@@ -38,7 +56,7 @@ typedef struct __mavlink_apnt_gps_status_t
          { "snr", NULL, MAVLINK_TYPE_UINT8_T, 8, 52, offsetof(mavlink_apnt_gps_status_t, snr) }, \
          } \
 }
-
+#endif
 
 /**
  * @brief Pack a apnt_gps_status message
@@ -84,11 +102,7 @@ static inline uint16_t mavlink_msg_apnt_gps_status_pack(uint8_t system_id, uint8
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_APNT_GPS_STATUS;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_CRC);
-#else
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN);
-#endif
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_APNT_GPS_STATUS_MIN_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_CRC);
 }
 
 /**
@@ -136,11 +150,7 @@ static inline uint16_t mavlink_msg_apnt_gps_status_pack_chan(uint8_t system_id, 
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_APNT_GPS_STATUS;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_CRC);
-#else
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN);
-#endif
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_APNT_GPS_STATUS_MIN_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_CRC);
 }
 
 /**
@@ -197,11 +207,7 @@ static inline void mavlink_msg_apnt_gps_status_send(mavlink_channel_t chan, uint
 	_mav_put_uint8_t_array(buf, 36, prn, 8);
 	_mav_put_uint8_t_array(buf, 44, elevation, 8);
 	_mav_put_uint8_t_array(buf, 52, snr, 8);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_GPS_STATUS, buf, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_GPS_STATUS, buf, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_GPS_STATUS, buf, MAVLINK_MSG_ID_APNT_GPS_STATUS_MIN_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_CRC);
 #else
 	mavlink_apnt_gps_status_t packet;
 	packet.timestamp_usec = timestamp_usec;
@@ -212,11 +218,21 @@ static inline void mavlink_msg_apnt_gps_status_send(mavlink_channel_t chan, uint
 	mav_array_memcpy(packet.prn, prn, sizeof(uint8_t)*8);
 	mav_array_memcpy(packet.elevation, elevation, sizeof(uint8_t)*8);
 	mav_array_memcpy(packet.snr, snr, sizeof(uint8_t)*8);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_GPS_STATUS, (const char *)&packet, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_GPS_STATUS, (const char *)&packet, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_GPS_STATUS, (const char *)&packet, MAVLINK_MSG_ID_APNT_GPS_STATUS_MIN_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_CRC);
 #endif
+}
+
+/**
+ * @brief Send a apnt_gps_status message
+ * @param chan MAVLink channel to send the message
+ * @param struct The MAVLink struct to serialize
+ */
+static inline void mavlink_msg_apnt_gps_status_send_struct(mavlink_channel_t chan, const mavlink_apnt_gps_status_t* apnt_gps_status)
+{
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    mavlink_msg_apnt_gps_status_send(chan, apnt_gps_status->timestamp_usec, apnt_gps_status->gps_lat, apnt_gps_status->gps_lon, apnt_gps_status->gps_alt, apnt_gps_status->prn, apnt_gps_status->azimuth, apnt_gps_status->elevation, apnt_gps_status->snr);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_GPS_STATUS, (const char *)apnt_gps_status, MAVLINK_MSG_ID_APNT_GPS_STATUS_MIN_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_CRC);
 #endif
 }
 
@@ -240,11 +256,7 @@ static inline void mavlink_msg_apnt_gps_status_send_buf(mavlink_message_t *msgbu
 	_mav_put_uint8_t_array(buf, 36, prn, 8);
 	_mav_put_uint8_t_array(buf, 44, elevation, 8);
 	_mav_put_uint8_t_array(buf, 52, snr, 8);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_GPS_STATUS, buf, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_GPS_STATUS, buf, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_GPS_STATUS, buf, MAVLINK_MSG_ID_APNT_GPS_STATUS_MIN_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_CRC);
 #else
 	mavlink_apnt_gps_status_t *packet = (mavlink_apnt_gps_status_t *)msgbuf;
 	packet->timestamp_usec = timestamp_usec;
@@ -255,11 +267,7 @@ static inline void mavlink_msg_apnt_gps_status_send_buf(mavlink_message_t *msgbu
 	mav_array_memcpy(packet->prn, prn, sizeof(uint8_t)*8);
 	mav_array_memcpy(packet->elevation, elevation, sizeof(uint8_t)*8);
 	mav_array_memcpy(packet->snr, snr, sizeof(uint8_t)*8);
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_GPS_STATUS, (const char *)packet, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_GPS_STATUS, (const char *)packet, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_GPS_STATUS, (const char *)packet, MAVLINK_MSG_ID_APNT_GPS_STATUS_MIN_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN, MAVLINK_MSG_ID_APNT_GPS_STATUS_CRC);
 #endif
 }
 #endif
@@ -357,7 +365,7 @@ static inline uint16_t mavlink_msg_apnt_gps_status_get_snr(const mavlink_message
  */
 static inline void mavlink_msg_apnt_gps_status_decode(const mavlink_message_t* msg, mavlink_apnt_gps_status_t* apnt_gps_status)
 {
-#if MAVLINK_NEED_BYTE_SWAP
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	apnt_gps_status->timestamp_usec = mavlink_msg_apnt_gps_status_get_timestamp_usec(msg);
 	apnt_gps_status->gps_lat = mavlink_msg_apnt_gps_status_get_gps_lat(msg);
 	apnt_gps_status->gps_lon = mavlink_msg_apnt_gps_status_get_gps_lon(msg);
@@ -367,6 +375,8 @@ static inline void mavlink_msg_apnt_gps_status_decode(const mavlink_message_t* m
 	mavlink_msg_apnt_gps_status_get_elevation(msg, apnt_gps_status->elevation);
 	mavlink_msg_apnt_gps_status_get_snr(msg, apnt_gps_status->snr);
 #else
-	memcpy(apnt_gps_status, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN);
+        uint8_t len = msg->len < MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN? msg->len : MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN;
+        memset(apnt_gps_status, 0, MAVLINK_MSG_ID_APNT_GPS_STATUS_LEN);
+	memcpy(apnt_gps_status, _MAV_PAYLOAD(msg), len);
 #endif
 }

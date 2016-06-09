@@ -2,7 +2,7 @@
 
 #define MAVLINK_MSG_ID_APNT_POSITION 203
 
-typedef struct __mavlink_apnt_position_t
+typedef struct MAVLINK_PACKED __mavlink_apnt_position_t
 {
  uint64_t timestamp_usec; /*< timestamp since boot in usec of the position information from apnt*/
  float apnt_lat; /*< latitude from apnt*/
@@ -10,13 +10,26 @@ typedef struct __mavlink_apnt_position_t
 } mavlink_apnt_position_t;
 
 #define MAVLINK_MSG_ID_APNT_POSITION_LEN 16
+#define MAVLINK_MSG_ID_APNT_POSITION_MIN_LEN 16
 #define MAVLINK_MSG_ID_203_LEN 16
+#define MAVLINK_MSG_ID_203_MIN_LEN 16
 
 #define MAVLINK_MSG_ID_APNT_POSITION_CRC 168
 #define MAVLINK_MSG_ID_203_CRC 168
 
 
 
+#if MAVLINK_COMMAND_24BIT
+#define MAVLINK_MESSAGE_INFO_APNT_POSITION { \
+	203, \
+	"APNT_POSITION", \
+	3, \
+	{  { "timestamp_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_apnt_position_t, timestamp_usec) }, \
+         { "apnt_lat", NULL, MAVLINK_TYPE_FLOAT, 0, 8, offsetof(mavlink_apnt_position_t, apnt_lat) }, \
+         { "apnt_lon", NULL, MAVLINK_TYPE_FLOAT, 0, 12, offsetof(mavlink_apnt_position_t, apnt_lon) }, \
+         } \
+}
+#else
 #define MAVLINK_MESSAGE_INFO_APNT_POSITION { \
 	"APNT_POSITION", \
 	3, \
@@ -25,7 +38,7 @@ typedef struct __mavlink_apnt_position_t
          { "apnt_lon", NULL, MAVLINK_TYPE_FLOAT, 0, 12, offsetof(mavlink_apnt_position_t, apnt_lon) }, \
          } \
 }
-
+#endif
 
 /**
  * @brief Pack a apnt_position message
@@ -58,11 +71,7 @@ static inline uint16_t mavlink_msg_apnt_position_pack(uint8_t system_id, uint8_t
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_APNT_POSITION;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_APNT_POSITION_LEN, MAVLINK_MSG_ID_APNT_POSITION_CRC);
-#else
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_APNT_POSITION_LEN);
-#endif
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_APNT_POSITION_MIN_LEN, MAVLINK_MSG_ID_APNT_POSITION_LEN, MAVLINK_MSG_ID_APNT_POSITION_CRC);
 }
 
 /**
@@ -97,11 +106,7 @@ static inline uint16_t mavlink_msg_apnt_position_pack_chan(uint8_t system_id, ui
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_APNT_POSITION;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_APNT_POSITION_LEN, MAVLINK_MSG_ID_APNT_POSITION_CRC);
-#else
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_APNT_POSITION_LEN);
-#endif
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_APNT_POSITION_MIN_LEN, MAVLINK_MSG_ID_APNT_POSITION_LEN, MAVLINK_MSG_ID_APNT_POSITION_CRC);
 }
 
 /**
@@ -149,22 +154,28 @@ static inline void mavlink_msg_apnt_position_send(mavlink_channel_t chan, uint64
 	_mav_put_float(buf, 8, apnt_lat);
 	_mav_put_float(buf, 12, apnt_lon);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_POSITION, buf, MAVLINK_MSG_ID_APNT_POSITION_LEN, MAVLINK_MSG_ID_APNT_POSITION_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_POSITION, buf, MAVLINK_MSG_ID_APNT_POSITION_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_POSITION, buf, MAVLINK_MSG_ID_APNT_POSITION_MIN_LEN, MAVLINK_MSG_ID_APNT_POSITION_LEN, MAVLINK_MSG_ID_APNT_POSITION_CRC);
 #else
 	mavlink_apnt_position_t packet;
 	packet.timestamp_usec = timestamp_usec;
 	packet.apnt_lat = apnt_lat;
 	packet.apnt_lon = apnt_lon;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_POSITION, (const char *)&packet, MAVLINK_MSG_ID_APNT_POSITION_LEN, MAVLINK_MSG_ID_APNT_POSITION_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_POSITION, (const char *)&packet, MAVLINK_MSG_ID_APNT_POSITION_LEN);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_POSITION, (const char *)&packet, MAVLINK_MSG_ID_APNT_POSITION_MIN_LEN, MAVLINK_MSG_ID_APNT_POSITION_LEN, MAVLINK_MSG_ID_APNT_POSITION_CRC);
 #endif
+}
+
+/**
+ * @brief Send a apnt_position message
+ * @param chan MAVLink channel to send the message
+ * @param struct The MAVLink struct to serialize
+ */
+static inline void mavlink_msg_apnt_position_send_struct(mavlink_channel_t chan, const mavlink_apnt_position_t* apnt_position)
+{
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    mavlink_msg_apnt_position_send(chan, apnt_position->timestamp_usec, apnt_position->apnt_lat, apnt_position->apnt_lon);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_POSITION, (const char *)apnt_position, MAVLINK_MSG_ID_APNT_POSITION_MIN_LEN, MAVLINK_MSG_ID_APNT_POSITION_LEN, MAVLINK_MSG_ID_APNT_POSITION_CRC);
 #endif
 }
 
@@ -184,22 +195,14 @@ static inline void mavlink_msg_apnt_position_send_buf(mavlink_message_t *msgbuf,
 	_mav_put_float(buf, 8, apnt_lat);
 	_mav_put_float(buf, 12, apnt_lon);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_POSITION, buf, MAVLINK_MSG_ID_APNT_POSITION_LEN, MAVLINK_MSG_ID_APNT_POSITION_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_POSITION, buf, MAVLINK_MSG_ID_APNT_POSITION_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_POSITION, buf, MAVLINK_MSG_ID_APNT_POSITION_MIN_LEN, MAVLINK_MSG_ID_APNT_POSITION_LEN, MAVLINK_MSG_ID_APNT_POSITION_CRC);
 #else
 	mavlink_apnt_position_t *packet = (mavlink_apnt_position_t *)msgbuf;
 	packet->timestamp_usec = timestamp_usec;
 	packet->apnt_lat = apnt_lat;
 	packet->apnt_lon = apnt_lon;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_POSITION, (const char *)packet, MAVLINK_MSG_ID_APNT_POSITION_LEN, MAVLINK_MSG_ID_APNT_POSITION_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_POSITION, (const char *)packet, MAVLINK_MSG_ID_APNT_POSITION_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_APNT_POSITION, (const char *)packet, MAVLINK_MSG_ID_APNT_POSITION_MIN_LEN, MAVLINK_MSG_ID_APNT_POSITION_LEN, MAVLINK_MSG_ID_APNT_POSITION_CRC);
 #endif
 }
 #endif
@@ -247,11 +250,13 @@ static inline float mavlink_msg_apnt_position_get_apnt_lon(const mavlink_message
  */
 static inline void mavlink_msg_apnt_position_decode(const mavlink_message_t* msg, mavlink_apnt_position_t* apnt_position)
 {
-#if MAVLINK_NEED_BYTE_SWAP
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	apnt_position->timestamp_usec = mavlink_msg_apnt_position_get_timestamp_usec(msg);
 	apnt_position->apnt_lat = mavlink_msg_apnt_position_get_apnt_lat(msg);
 	apnt_position->apnt_lon = mavlink_msg_apnt_position_get_apnt_lon(msg);
 #else
-	memcpy(apnt_position, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_APNT_POSITION_LEN);
+        uint8_t len = msg->len < MAVLINK_MSG_ID_APNT_POSITION_LEN? msg->len : MAVLINK_MSG_ID_APNT_POSITION_LEN;
+        memset(apnt_position, 0, MAVLINK_MSG_ID_APNT_POSITION_LEN);
+	memcpy(apnt_position, _MAV_PAYLOAD(msg), len);
 #endif
 }

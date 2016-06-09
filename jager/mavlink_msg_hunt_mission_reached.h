@@ -2,26 +2,37 @@
 
 #define MAVLINK_MSG_ID_HUNT_MISSION_REACHED 213
 
-typedef struct __mavlink_hunt_mission_reached_t
+typedef struct MAVLINK_PACKED __mavlink_hunt_mission_reached_t
 {
  uint16_t reached_cmd_id; /*< the cmd id of the command that was most recently completed*/
 } mavlink_hunt_mission_reached_t;
 
 #define MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN 2
+#define MAVLINK_MSG_ID_HUNT_MISSION_REACHED_MIN_LEN 2
 #define MAVLINK_MSG_ID_213_LEN 2
+#define MAVLINK_MSG_ID_213_MIN_LEN 2
 
 #define MAVLINK_MSG_ID_HUNT_MISSION_REACHED_CRC 51
 #define MAVLINK_MSG_ID_213_CRC 51
 
 
 
+#if MAVLINK_COMMAND_24BIT
+#define MAVLINK_MESSAGE_INFO_HUNT_MISSION_REACHED { \
+	213, \
+	"HUNT_MISSION_REACHED", \
+	1, \
+	{  { "reached_cmd_id", NULL, MAVLINK_TYPE_UINT16_T, 0, 0, offsetof(mavlink_hunt_mission_reached_t, reached_cmd_id) }, \
+         } \
+}
+#else
 #define MAVLINK_MESSAGE_INFO_HUNT_MISSION_REACHED { \
 	"HUNT_MISSION_REACHED", \
 	1, \
 	{  { "reached_cmd_id", NULL, MAVLINK_TYPE_UINT16_T, 0, 0, offsetof(mavlink_hunt_mission_reached_t, reached_cmd_id) }, \
          } \
 }
-
+#endif
 
 /**
  * @brief Pack a hunt_mission_reached message
@@ -48,11 +59,7 @@ static inline uint16_t mavlink_msg_hunt_mission_reached_pack(uint8_t system_id, 
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_HUNT_MISSION_REACHED;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_CRC);
-#else
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN);
-#endif
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_MIN_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_CRC);
 }
 
 /**
@@ -81,11 +88,7 @@ static inline uint16_t mavlink_msg_hunt_mission_reached_pack_chan(uint8_t system
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_HUNT_MISSION_REACHED;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_CRC);
-#else
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN);
-#endif
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_MIN_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_CRC);
 }
 
 /**
@@ -129,20 +132,26 @@ static inline void mavlink_msg_hunt_mission_reached_send(mavlink_channel_t chan,
 	char buf[MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN];
 	_mav_put_uint16_t(buf, 0, reached_cmd_id);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED, buf, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED, buf, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED, buf, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_MIN_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_CRC);
 #else
 	mavlink_hunt_mission_reached_t packet;
 	packet.reached_cmd_id = reached_cmd_id;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED, (const char *)&packet, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED, (const char *)&packet, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN);
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED, (const char *)&packet, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_MIN_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_CRC);
 #endif
+}
+
+/**
+ * @brief Send a hunt_mission_reached message
+ * @param chan MAVLink channel to send the message
+ * @param struct The MAVLink struct to serialize
+ */
+static inline void mavlink_msg_hunt_mission_reached_send_struct(mavlink_channel_t chan, const mavlink_hunt_mission_reached_t* hunt_mission_reached)
+{
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    mavlink_msg_hunt_mission_reached_send(chan, hunt_mission_reached->reached_cmd_id);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED, (const char *)hunt_mission_reached, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_MIN_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_CRC);
 #endif
 }
 
@@ -160,20 +169,12 @@ static inline void mavlink_msg_hunt_mission_reached_send_buf(mavlink_message_t *
 	char *buf = (char *)msgbuf;
 	_mav_put_uint16_t(buf, 0, reached_cmd_id);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED, buf, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED, buf, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED, buf, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_MIN_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_CRC);
 #else
 	mavlink_hunt_mission_reached_t *packet = (mavlink_hunt_mission_reached_t *)msgbuf;
 	packet->reached_cmd_id = reached_cmd_id;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED, (const char *)packet, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED, (const char *)packet, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN);
-#endif
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HUNT_MISSION_REACHED, (const char *)packet, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_MIN_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_CRC);
 #endif
 }
 #endif
@@ -201,9 +202,11 @@ static inline uint16_t mavlink_msg_hunt_mission_reached_get_reached_cmd_id(const
  */
 static inline void mavlink_msg_hunt_mission_reached_decode(const mavlink_message_t* msg, mavlink_hunt_mission_reached_t* hunt_mission_reached)
 {
-#if MAVLINK_NEED_BYTE_SWAP
+#if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	hunt_mission_reached->reached_cmd_id = mavlink_msg_hunt_mission_reached_get_reached_cmd_id(msg);
 #else
-	memcpy(hunt_mission_reached, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN);
+        uint8_t len = msg->len < MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN? msg->len : MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN;
+        memset(hunt_mission_reached, 0, MAVLINK_MSG_ID_HUNT_MISSION_REACHED_LEN);
+	memcpy(hunt_mission_reached, _MAV_PAYLOAD(msg), len);
 #endif
 }
